@@ -9,10 +9,10 @@ export default function Home() {
   const startY = useRef(0);
   const startHeight = useRef(0);
 
-  const MIN = 110;
-  const MAX = 420;
+  const MIN = 120;
+  const MAX = 460;
 
-  const [height, setHeight] = useState(400);
+  const [height, setHeight] = useState(300);
   const [dragging, setDragging] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -33,8 +33,7 @@ export default function Home() {
 
   const onTouchEnd = () => {
     setDragging(false);
-    // natural settle
-    if (height < 200) setHeight(MIN);
+    if (height < 230) setHeight(MIN);
     else setHeight(MAX);
   };
 
@@ -42,10 +41,10 @@ export default function Home() {
     <PublicLayout>
       <Head title="Home" />
 
-      <div className="fixed inset-0 overflow-hidden bg-white">
+      <div className="fixed inset-0 overflow-hidden bg-[#ffffff]">
 
-        {/* MAP PLACEHOLDER */}
-        <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-sm">
+        {/* MAP AREA */}
+        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
           Map Area
         </div>
 
@@ -53,44 +52,48 @@ export default function Home() {
         <div
           style={{ height }}
           className={`
-                        absolute bottom-0 left-0 right-0 z-20
-                        bg-white rounded-t-[28px]
-                        shadow-[0_-10px_30px_rgba(0,0,0,0.06)]
-                        ${dragging
+            absolute bottom-16 left-0 right-0 z-20
+            bg-[#ffffff] rounded-t-[28px]
+            shadow-[0_-12px_30px_rgba(0,0,0,0.08)]
+            ${dragging
               ? "transition-none"
-              : "transition-[height] duration-400 ease-[cubic-bezier(.22,1,.36,1)]"}
-                    `}
+              : "transition-[height] duration-300 ease-out"}
+          `}
         >
-          {/* DRAG + SEARCH */}
+          {/* DRAG HANDLE */}
           <div
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
-            className="px-6 pt-4 pb-4"
+            className="px-6 pt-4 pb-3"
           >
-            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
+            <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-5" />
 
+            {/* SEARCH BAR */}
             <div
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-3"
+              className="flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl"
             >
               <i className="fa-solid fa-magnifying-glass text-gray-400 text-sm"></i>
-              <div className="flex-1 border-b border-gray-200 py-2 text-gray-700 font-medium">
+              <span className="text-gray-600 font-medium">
                 Where to?
-              </div>
+              </span>
             </div>
           </div>
 
           {/* QUICK SAVED */}
-          <div className="px-6 space-y-4">
+          <div className="px-6 space-y-5 mt-2">
             {[
               { icon: "fa-house", label: "Home" },
               { icon: "fa-briefcase", label: "Office" },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <i className={`fa-solid ${item.icon} text-blue-500 text-sm`}></i>
-                <div className="flex-1 border-b border-gray-100 py-2">
-                  <p className="text-sm font-medium text-gray-800">
+              <div key={i} className="flex items-center gap-4">
+                <div className="w-9 h-9 rounded-full bg-yellow-100 flex items-center justify-center">
+                  <i className={`fa-solid ${item.icon} text-yellow-500 text-sm`}></i>
+                </div>
+
+                <div className="flex-1 border-b border-gray-100 pb-3">
+                  <p className="text-sm font-semibold text-gray-900">
                     {item.label}
                   </p>
                   <p className="text-xs text-gray-400">
@@ -115,7 +118,6 @@ export default function Home() {
         {bookingOpen && (
           <BookingPage onClose={() => setBookingOpen(false)} />
         )}
-
 
         <BottomNav />
       </div>
