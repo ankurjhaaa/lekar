@@ -1,123 +1,102 @@
 import PublicLayout from "@/layouts/PublicLayout";
-import { Head } from "@inertiajs/react";
-import { useRef, useState } from "react";
+import { Head, router } from "@inertiajs/react";
 import BottomNav from "./components/bottomnav";
-import SearchPlace from "./components/SearchPlace";
-import BookingPage from "./components/bookingpage";
+import Map from "@/Components/Map";
 
 export default function Home() {
-  const startY = useRef(0);
-  const startHeight = useRef(0);
-
-  const MIN = 120;
-  const MAX = 460;
-
-  const [height, setHeight] = useState(300);
-  const [dragging, setDragging] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [bookingOpen, setBookingOpen] = useState(false);
-
-  const onTouchStart = (e) => {
-    setDragging(true);
-    startY.current = e.touches[0].clientY;
-    startHeight.current = height;
-  };
-
-  const onTouchMove = (e) => {
-    if (!dragging) return;
-    const delta = startY.current - e.touches[0].clientY;
-    let next = startHeight.current + delta;
-    next = Math.max(MIN, Math.min(next, MAX));
-    setHeight(next);
-  };
-
-  const onTouchEnd = () => {
-    setDragging(false);
-    if (height < 230) setHeight(MIN);
-    else setHeight(MAX);
-  };
-
   return (
     <PublicLayout>
       <Head title="Home" />
 
-      <div className="fixed inset-0 overflow-hidden bg-[#ffffff]">
+      <div className="relative bg-gray-50 min-h-screen pb-20">
 
-        {/* MAP AREA */}
-        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
-          Map Area
+        {/* FIXED MAP BACKGROUND */}
+        <div className="fixed top-0 left-0 right-0 h-[65vh] z-0">
+          <Map />
         </div>
 
-        {/* SEARCH SHEET */}
-        <div
-          style={{ height }}
-          className={`
-            absolute bottom-16 left-0 right-0 z-20
-            bg-[#ffffff] rounded-t-[28px]
-            shadow-[0_-12px_30px_rgba(0,0,0,0.08)]
-            ${dragging
-              ? "transition-none"
-              : "transition-[height] duration-300 ease-out"}
-          `}
-        >
-          {/* DRAG HANDLE */}
-          <div
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-            className="px-6 pt-4 pb-3"
-          >
-            <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-5" />
+        {/* SCROLLABLE CONTENT OVERLAY */}
+        {/* Adds margin-top to start content below, allowing map to be seen */}
+        <div className="relative z-10 mt-[45vh] px-4">
 
-            {/* SEARCH BAR */}
-            <div
-              onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl"
-            >
-              <i className="fa-solid fa-magnifying-glass text-gray-400 text-sm"></i>
-              <span className="text-gray-600 font-medium">
-                Where to?
-              </span>
-            </div>
-          </div>
+          {/* MAIN CONTENT CARD */}
+          <div className="bg-white rounded-t-3xl min-h-screen shadow-2xl -mx-4 px-4 pt-4 pb-24">
 
-          {/* QUICK SAVED */}
-          <div className="px-6 space-y-5 mt-2">
-            {[
-              { icon: "fa-house", label: "Home" },
-              { icon: "fa-briefcase", label: "Office" },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <div className="w-9 h-9 rounded-full bg-yellow-100 flex items-center justify-center">
-                  <i className={`fa-solid ${item.icon} text-yellow-500 text-sm`}></i>
+            {/* DRAG HANDLE INDICATOR */}
+            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4"></div>
+
+            {/* STICKY SEARCH BAR */}
+            <div className="sticky top-0 z-20 bg-white pb-4 pt-2">
+              <div
+                onClick={() => router.visit('/search')}
+                className="flex items-center gap-4 bg-white border border-gray-100 p-4 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50 transition-colors"
+              >
+                <div className="text-xl text-yellow-500">
+                  <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center">
+                    <i className="fa-solid fa-magnifying-glass text-sm"></i>
+                  </div>
                 </div>
-
-                <div className="flex-1 border-b border-gray-100 pb-3">
-                  <p className="text-sm font-semibold text-gray-900">
-                    {item.label}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    Saved place
-                  </p>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800">Where do you want to go?</h3>
+                  <p className="text-xs text-gray-400">Search destination</p>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* EXPLORE SECTION */}
+            <div className="mb-8 mt-2">
+              <h3 className="text-gray-900 font-bold text-lg mb-4">Explore</h3>
+              <div className="grid grid-cols-4 gap-4">
+                {[
+                  { name: "Parcel", icon: "box" },
+                  { name: "Auto", icon: "taxi" },
+                  { name: "Cab", icon: "car" },
+                  { name: "Bike", icon: "motorcycle" }
+                ].map((item, i) => (
+                  <div key={i} className="flex flex-col items-center gap-2">
+                    {/* Placeholder Image Div */}
+                    <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-400">
+                      <i className={`fa-solid fa-${item.icon} text-xl`}></i>
+                    </div>
+                    <span className="text-xs font-medium text-gray-600">{item.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* PROMO BANNER PLACEHOLDER */}
+            <div className="mb-8">
+              <div className="w-full h-32 bg-indigo-50 rounded-2xl flex items-center justify-center border-2 border-dashed border-indigo-100 text-indigo-300">
+                <span className="font-medium">Promo Banner</span>
+              </div>
+            </div>
+
+            {/* GO PLACES / RECENT */}
+            <div className="mb-8">
+              <h3 className="text-gray-900 font-bold text-lg mb-4">Go Places</h3>
+              <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
+                {[1, 2, 3].map((item) => (
+                  <div key={item} className="flex-shrink-0 w-64">
+                    <div className="w-full h-32 bg-gray-100 rounded-2xl mb-3 flex items-center justify-center text-gray-300">
+                      <i className="fa-solid fa-image text-2xl"></i>
+                    </div>
+                    <p className="font-bold text-gray-800">Popular Destination {item}</p>
+                    <p className="text-xs text-gray-500">123 Street Name, City Area</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* MORE CONTENT PLACEHOLDER (to enable scrolling) */}
+            <div className="mb-8">
+              <h3 className="text-gray-900 font-bold text-lg mb-4">Offers</h3>
+              <div className="w-full h-40 bg-yellow-50 rounded-2xl flex items-center justify-center border-2 border-dashed border-yellow-200 text-yellow-500">
+                <span className="font-bold">Exclusive Offers</span>
+              </div>
+            </div>
+
           </div>
         </div>
-
-        {searchOpen && (
-          <SearchPlace
-            onClose={() => setSearchOpen(false)}
-            onComplete={() => {
-              setSearchOpen(false);
-              setBookingOpen(true);
-            }}
-          />
-        )}
-
-        {bookingOpen && (
-          <BookingPage onClose={() => setBookingOpen(false)} />
-        )}
 
         <BottomNav />
       </div>

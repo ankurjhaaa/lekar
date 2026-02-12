@@ -26,4 +26,19 @@ class PublicController extends Controller
     {
         return inertia('Services');
     }
+
+    public function search()
+    {
+        return inertia('Search');
+    }
+
+    public function booking()
+    {
+        return inertia('Booking');
+    }
+
+    public function findingDriver()
+    {
+        return inertia('FindingDriver');
+    }
 }
