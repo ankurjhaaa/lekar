@@ -26,9 +26,9 @@ export default function BottomNav() {
             isActive: url.startsWith("/activity")
         },
         {
-            id: 'account',
+            id: 'profile',
             icon: "user",
-            label: "Account",
+            label: "Profile",
             route: "/profile",
             isActive: url.startsWith("/profile")
         },
