@@ -4,6 +4,7 @@ RUN apk add --no-cache \
     bash \
     git \
     curl \
+    sqlite-dev \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
