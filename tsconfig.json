@@ -110,6 +110,6 @@
     "include": [
         "resources/js/**/*.ts",
         "resources/js/**/*.d.ts",
-        "resources/js/**/*.jsx",
+        "resources/js/**/*.jsx", "resources/js/app.tsx",
     ]
 }
