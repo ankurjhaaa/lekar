@@ -1,9 +1,37 @@
+import { useState, useEffect } from "react";
 import PublicLayout from "@/layouts/PublicLayout";
 import { Head, router } from "@inertiajs/react";
 import BottomNav from "./components/bottomnav";
 import Map from "@/Components/Map";
 
+
 export default function Home() {
+  const [userLocation, setUserLocation] = useState({ lat: 28.6139, lng: 77.2090 });
+  const [vehicles, setVehicles] = useState([]);
+
+  useEffect(() => {
+    // Get User Location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        setUserLocation({ lat: latitude, lng: longitude });
+
+        // Generate random vehicles around user
+        const types = ['bike', 'auto', 'cab', 'toto'];
+        const generated = Array.from({ length: 8 }).map((_, i) => ({
+          id: i,
+          type: types[Math.floor(Math.random() * types.length)],
+          position: {
+            lat: latitude + (Math.random() - 0.5) * 0.015,
+            lng: longitude + (Math.random() - 0.5) * 0.015
+          },
+          heading: Math.floor(Math.random() * 360)
+        }));
+        setVehicles(generated);
+      });
+    }
+  }, []);
+
   return (
     <PublicLayout>
       <Head title="Home" />
@@ -12,7 +40,7 @@ export default function Home() {
 
         {/* FIXED MAP BACKGROUND */}
         <div className="fixed top-0 left-0 right-0 h-[65vh] z-0">
-          <Map />
+          <Map vehicles={vehicles} center={userLocation} />
         </div>
 
         {/* SCROLLABLE CONTENT OVERLAY */}
@@ -114,7 +142,7 @@ export default function Home() {
         </div>
 
         <BottomNav />
-      </div>
-    </PublicLayout>
+      </div >
+    </PublicLayout >
   );
 }
