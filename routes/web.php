@@ -43,5 +43,9 @@ Route::controller(PublicController::class)->group(function () {
         return Inertia::render('coins');
     })->name('coins');
     Route::get('/oneway', function () {
-        return Inertia::render('oneway'); })->name('oneway');
+        return Inertia::render('oneway');
+    })->name('oneway');
 });
+
+Route::post('/book', [\App\Http\Controllers\BookingController::class, 'store'])->name('book');
+Route::get('/booking/{id}/status', [\App\Http\Controllers\BookingController::class, 'status'])->name('booking.status');

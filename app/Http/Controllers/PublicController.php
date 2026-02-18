@@ -37,8 +37,15 @@ class PublicController extends Controller
         return inertia('Booking');
     }
 
-    public function findingDriver()
+    public function findingDriver(Request $request)
     {
-        return inertia('FindingDriver');
+        $id = $request->id;
+        $booking = \App\Models\Booking::find($id);
+        if (!$booking)
+            return to_route('home');
+
+        return inertia('FindingDriver', [
+            'booking' => $booking
+        ]);
     }
 }
